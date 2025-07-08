@@ -14,12 +14,10 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        $samplePassowrd = 'Test1234';
-
         User::create([
             'name' => 'Test User',
             'email' => 'test@example.com',
-            'password' => Hash::make($samplePassowrd)
+            'password' => Hash::make('Password1234')
         ]);
     }
 }
