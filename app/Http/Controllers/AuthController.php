@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
@@ -63,6 +64,7 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
+
         $request->user()->tokens()->delete();
 
         return response()->json([

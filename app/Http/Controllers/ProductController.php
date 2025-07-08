@@ -12,7 +12,6 @@ class ProductController extends Controller
 
     public function index(Request $request)
     {
-        
         $products = Product::with('categories')->where('user_id',Auth::user()->id)->get();
         return response()->json($products, 200);
     }
@@ -28,8 +27,7 @@ class ProductController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:100',
             'sell_price' => 'required|numeric',
-            'category_ids' => 'required|array',
-            'category_ids.*' => 'exists:categories,id'
+            'category_ids' => 'required|array'
         ]);
 
         $product = $request->user()->products()->create([
