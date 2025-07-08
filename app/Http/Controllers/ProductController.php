@@ -8,13 +8,12 @@ use App\Models\Category;
 
 class ProductController extends Controller
 {
-    //
 
     public function index()
     {
         $products = Product::with('categories')->get();
         return response()->json($products, 200);
-    }
+    }   
 
     public function show(int $id)
     {
@@ -27,14 +26,13 @@ class ProductController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:100',
             'sell_price' => 'required|numeric',
-            'is_active' => 'boolean',
             'category_ids' => 'required|array'
         ]);
 
         $product = Product::create([
             'name' => $validated['name'],
             'sell_price' => $validated['sell_price'],
-            'is_active' => $validated['is_active'] ?? true
+
         ]);
 
         if (!empty($validated['category_ids'])) {
@@ -44,7 +42,7 @@ class ProductController extends Controller
         return response()->json($product->load('categories'), 201);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
         $validated = $request->validate([
             'name'       => 'sometimes|string|max:255',
@@ -63,7 +61,7 @@ class ProductController extends Controller
         return response()->json($product->load('categories'));
     }
 
-    public function delete($id)
+    public function destroy($id)
     {
         $product = Product::findOrFail($id);
         $product->delete();

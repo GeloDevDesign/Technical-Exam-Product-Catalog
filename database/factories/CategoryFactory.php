@@ -26,7 +26,6 @@ class CategoryFactory extends Factory
             'Motorcycle'
         ];
 
-
         return [
             'name' => fake()->randomElement($categories),
         ];
