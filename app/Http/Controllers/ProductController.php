@@ -62,4 +62,14 @@ class ProductController extends Controller
 
         return response()->json($product->load('categories'));
     }
+
+    public function delete($id)
+    {
+        $product = Product::findOrFail($id);
+        $product->categories()->detach();
+
+        $product->delete();
+
+        return response()->json(['message' => 'Product deleted']);
+    }
 }
