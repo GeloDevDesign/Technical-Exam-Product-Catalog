@@ -23,7 +23,7 @@ class AuthController extends Controller
                     ->symbols()
                     ->letters()
                     ->mixedCase()
-                    ->uncompromised()
+                    // ->uncompromised()
             ],
         ]);
 
