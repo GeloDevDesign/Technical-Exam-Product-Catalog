@@ -61,5 +61,12 @@ class AuthController extends Controller
         ], 201);
     }
 
-    public function logout() {}
+    public function logout(Request $request)
+    {
+        $request->user()->token()->delete();
+
+        return response()->json([
+            'message' => 'Logout sucessfully.'
+        ]);
+    }
 }

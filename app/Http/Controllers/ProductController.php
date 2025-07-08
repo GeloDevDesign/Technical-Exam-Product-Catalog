@@ -9,11 +9,12 @@ use App\Models\Category;
 class ProductController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
+        
         $products = Product::with('categories')->get();
         return response()->json($products, 200);
-    }   
+    }
 
     public function show(int $id)
     {
@@ -29,10 +30,12 @@ class ProductController extends Controller
             'category_ids' => 'required|array'
         ]);
 
-        $product = $request->user()->product()->create([
+        $product = $request->user()->products()->create([
             'name' => $validated['name'],
             'sell_price' => $validated['sell_price'],
         ]);
+
+  
 
         if (!empty($validated['category_ids'])) {
             $product->categories()->attach($validated['category_ids']);
@@ -44,8 +47,8 @@ class ProductController extends Controller
     public function update(Request $request, int $id)
     {
         $validated = $request->validate([
-            'name'       => 'sometimes|string|max:255',
-            'sell_price' => 'sometimes|numeric',
+            'name'       => 'required|string|max:255',
+            'sell_price' => 'required|numeric',
             'is_active'  => 'boolean',
             'category_ids' => 'required|array'
         ]);
