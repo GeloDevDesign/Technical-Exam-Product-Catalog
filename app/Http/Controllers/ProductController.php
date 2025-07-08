@@ -29,10 +29,9 @@ class ProductController extends Controller
             'category_ids' => 'required|array'
         ]);
 
-        $product = Product::create([
+        $product = $request->user()->product()->create([
             'name' => $validated['name'],
             'sell_price' => $validated['sell_price'],
-
         ]);
 
         if (!empty($validated['category_ids'])) {
