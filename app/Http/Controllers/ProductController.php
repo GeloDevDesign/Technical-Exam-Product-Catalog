@@ -12,12 +12,30 @@ class ProductController extends Controller
 
     public function index(Request $request)
     {
-        $perPage = $request->input('per_page', 10);
-        $products = Product::with('categories')
-        ->where('user_id', Auth::id())
-        ->latest()
-        ->paginate($perPage);
-        return response()->json($products, 200);
+        $query = Product::with('categories')
+            ->where('user_id', Auth::id())
+            ->latest();
+
+      
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('products.name', 'like', '%' . $search . '%')
+                    ->orWhere('products.sell_price', 'like', '%' . $search . '%');
+            });
+        }
+
+       
+        if ($request->filled('category_id')) {
+            $query->whereHas('categories', function ($q) use ($request) {
+                $q->where('categories.id', $request->category_id);
+            });
+        }
+
+        $products = $query->paginate($request->per_page ?? 10)
+            ->appends($request->query());
+
+        return response()->json($products);
     }
 
     public function show(int $id)
