@@ -23,7 +23,7 @@ class AuthController extends Controller
                     ->symbols()
                     ->letters()
                     ->mixedCase()
-                    // ->uncompromised()
+                // ->uncompromised()
             ],
         ]);
 
@@ -49,8 +49,12 @@ class AuthController extends Controller
 
         $user = User::where('email', $request->email)->first();
 
-        if (!$user || !Hash::check($validated['password'], $user->password)) {
-            return response()->json(['message' => 'The provided credentials are incorrect.'], 403);
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            return response()->json([
+                'errors' => [
+                    'email' => ['The provided credentials are incorrect.']
+                ]
+            ], 403);
         }
 
         $token = $user->createToken('auth_token')->plainTextToken;
