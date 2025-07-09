@@ -12,8 +12,8 @@ class ProductController extends Controller
 
     public function index(Request $request)
     {
-       
-        $products = Product::with('categories')->where('user_id',Auth::user()->id)->get();
+
+        $products = Product::with('categories')->where('user_id', Auth::user()->id)->latest()->get();
         return response()->json($products, 200);
     }
 
@@ -27,7 +27,7 @@ class ProductController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:100',
-            'sell_price' => 'required|numeric',
+            'sell_price' => 'required|numeric|min:1|gt:0',
             'category_ids' => 'required|array'
         ]);
 
@@ -36,7 +36,7 @@ class ProductController extends Controller
             'sell_price' => $validated['sell_price'],
         ]);
 
-  
+
 
         if (!empty($validated['category_ids'])) {
             $product->categories()->attach($validated['category_ids']);
@@ -49,7 +49,7 @@ class ProductController extends Controller
     {
         $validated = $request->validate([
             'name'       => 'required|string|max:255',
-            'sell_price' => 'required|numeric',
+            'sell_price' => 'required|numeric|min:1|gt:0',
             'is_active'  => 'boolean',
             'category_ids' => 'required|array'
         ]);
@@ -61,7 +61,11 @@ class ProductController extends Controller
             $product->categories()->sync($validated['category_ids']);
         }
 
-        return response()->json($product->load('categories'));
+        return response()->json([
+            'success' => true,
+            'message' => 'Product updated successfully',
+            'data' => $product->load('categories')
+        ]);
     }
 
     public function destroy(int $id)
@@ -70,5 +74,5 @@ class ProductController extends Controller
         $product->delete();
 
         return response()->json(['message' => 'Product deleted']);
-    } 
+    }
 }

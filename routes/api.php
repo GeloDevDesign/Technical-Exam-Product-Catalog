@@ -25,7 +25,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/categories', [CategoryController::class, 'index']);
 
 
-    Route::middleware(['can:modify'])->group(function () {
+    Route::middleware(['auth:sanctum'])->group(function () {
         Route::apiResource('products', ProductController::class)->except(['index','store']);
     });
 });
