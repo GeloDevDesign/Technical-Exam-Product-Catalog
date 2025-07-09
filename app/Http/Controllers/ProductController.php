@@ -12,8 +12,11 @@ class ProductController extends Controller
 
     public function index(Request $request)
     {
-
-        $products = Product::with('categories')->where('user_id', Auth::user()->id)->latest()->get();
+        $perPage = $request->input('per_page', 10);
+        $products = Product::with('categories')
+        ->where('user_id', Auth::id())
+        ->latest()
+        ->paginate($perPage);
         return response()->json($products, 200);
     }
 
